@@ -19,7 +19,7 @@ library(ggplot2)
 ############################ RUN THIS ##########################################
 
   # load dataset
-  setwd("C:/R_files/Meta-analisis/data/meta")
+  # setwd("")
   data <- read.csv("meta_ajust.csv", sep = ";") 
   
   # calculate effect size
