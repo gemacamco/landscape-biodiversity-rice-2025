@@ -19,8 +19,8 @@ library(ggplot2)
 ############################ RUN THIS ##########################################
 
   # load dataset
-  # setwd("")
-  data <- read.csv("meta_ajust.csv", sep = ";") 
+  setwd("C:/R_files/git_open/meta/data")
+  data <- read.csv("meta_ajust.csv", sep = ",") 
   
   # calculate effect size
     data <- escalc(measure = "ZCOR", ri = r_dir, ni = n_total, data = data)
@@ -55,7 +55,7 @@ library(ggplot2)
       
   # META-ANALYSIS LABELS - select which analysis you want to run 
   
-    # 1.1. Landscape complexity effect on biodiversity  -> "general"                   # Faltaría mod8 y mod9
+    # 1.1. Landscape complexity effect on biodiversity  -> "general"                   
     # 1.2. Landscape complexity effect on vertebrates   -> "land_vert"
     # 1.3. Landscape complexity effect on invertebrates -> "land_invert"
 
@@ -76,7 +76,7 @@ library(ggplot2)
 
   
     # Insert the choosen label
-    LB <- "land_habitat"  
+    LB <- "dim_Bird"  
     
     # Run this to select the appropriate data and model structure
       switch(LB,
@@ -140,14 +140,29 @@ library(ggplot2)
                mods <- ~g_indicator
                mod <- build_model(data_model, mods = mods)
              },
-             "land_desbio" = {
-               data_model <- filter(data)
-               mods <- ~g_desbio
+             "dim_Anura" = {
+               data_model <- subset(data, orden == "Anura")
+               mods <- NULL
                mod <- build_model(data_model, mods = mods)
              },
-             "land_habitat" = {
-               data_model <- data %>% filter(!is.na(habitat))  ## Mantener?
-               mods <- ~habitat
+             "dim_Bird" = {
+               data_model <- subset(data, orden == "Bird")
+               mods <- NULL
+               mod <- build_model(data_model, mods = mods)
+             },
+             "land_abuden" = {
+               data_model <- filter(data, g_desbio == "abu_den")
+               mods <- NULL
+               mod <- build_model(data_model, mods = mods)
+             },
+             "land_richness" = {
+               data_model <- filter(data, g_desbio == "richness")
+               mods <- NULL
+               mod <- build_model(data_model, mods = mods)
+             },
+             "land_shannon" = {
+               data_model <- filter(data, g_desbio == "shannon")
+               mods <- NULL
                mod <- build_model(data_model, mods = mods)
              }
       )
