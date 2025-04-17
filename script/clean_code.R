@@ -20,7 +20,7 @@ library(ggplot2)
 
   # load dataset
   setwd("C:/R_files/git_open/meta/data")
-  data <- read.csv("meta_ajust.csv", sep = ",") 
+  data <- read.csv("meta_ajust_2.csv", sep = ",") 
   
   # calculate effect size
     data <- escalc(measure = "ZCOR", ri = r_dir, ni = n_total, data = data)
@@ -76,7 +76,7 @@ library(ggplot2)
 
   
     # Insert the choosen label
-    LB <- "dim_Bird"  
+    LB <- "dim_Hymenoptera"  
     
     # Run this to select the appropriate data and model structure
       switch(LB,
