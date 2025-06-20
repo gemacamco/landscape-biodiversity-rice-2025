@@ -1,5 +1,9 @@
 
-# Article title:
+## Article title: Effects of landscape complexity on biodiversity of rice agroecosystems: a meta-analysis 
+## Authors: Gema Cambero-Conejero, Carles Alcaraz, Néstor Pérez-Méndez
+## Contact: Gema Cambero Conejero; gema.cambero@irta.cat
+##          Néstor Pérez Méndez; nestor.perez@irta.cat
+
 
 ################################################################################
 
@@ -20,7 +24,7 @@ library(ggplot2)
 
   # load dataset
   setwd("C:/R_files/git_open/meta/data")
-  data <- read.csv("meta_ajust_2.csv", sep = ",") 
+  data <- read.csv("dataset.csv", sep = ";") 
   
   # calculate effect size
     data <- escalc(measure = "ZCOR", ri = r_dir, ni = n_total, data = data)
@@ -53,7 +57,7 @@ library(ggplot2)
 
 ################################################################################
       
-  # META-ANALYSIS LABELS - select which analysis you want to run 
+  # META-ANALYSIS LABELS - select the labels of the analysis you want to run 
   
     # 1.1. Landscape complexity effect on biodiversity  -> "general"                   
     # 1.2. Landscape complexity effect on vertebrates   -> "land_vert"
@@ -76,7 +80,7 @@ library(ggplot2)
 
   
     # Insert the choosen label
-    LB <- "dim_Hymenoptera"  
+    LB <- "general"  
     
     # Run this to select the appropriate data and model structure
       switch(LB,
@@ -235,6 +239,9 @@ library(ggplot2)
     print(plot)
     
     # 7. Outliers analysis
+    # NOTE: outliers analysis cannot be performed for models with a small number 
+    # of observations (i.e., Lepidoptera and Odonata)
+    
       # calculate Cook's distance for each effect size
       x <- cooks.distance(mod, parallel = "snow", ncpus=40)  # this can take a few minutes
       plot(x, type="o", pch=19, xlab="Observed Outcome", ylab="Cook's Distance", las=1) 
