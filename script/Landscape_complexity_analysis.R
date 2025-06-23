@@ -196,12 +196,8 @@ library(ggplot2)
         pval = coef$pval
       )
 
-    # 3. Profile likelihood plots
-    par(mfrow=c(1,1))
-    profile(mod, sigma2=1)  # ref - study
-    profile(mod, sigma2=2)  # id_r - effect size
-    
-    # 4. Forest plot
+  
+    # 3. Forest plot
     forest(mod,
            addpred=TRUE, 
            header=TRUE, 
@@ -212,7 +208,7 @@ library(ggplot2)
            addfit=TRUE, 
            slab=data_model$id_r)  # Use the subset data
     
-    # 5. I2 for multilevel and multivariate models
+    # 4. I2 for multilevel and multivariate models
      # From: https://www.metafor-project.org/doku.php/tips:i2_multilevel_multivariate
      # Overall I2 -> indicated how much of the total variance can be attributed 
      # to the total amount of heterogeneity (which is the sum of between- and 
@@ -228,7 +224,7 @@ library(ggplot2)
       i2p <- 100 * mod$sigma2 / (sum(mod$sigma2) + (mod$k-mod$p)/sum(diag(P)))
       cat("Between- and within-cluster I2 for", LB, ":", i2p, "\n")
     
-    # 6. graphical display
+    # 5. Graphical display
     plot <- ggplot(coef_bt, aes(x = Estimate, y = Term)) +
       geom_point(size = 3, color = "purple") +
       geom_errorbarh(aes(xmin = CI.Lower, xmax = CI.Upper), height = 0.1, color = "purple", linewidth = 1) +
@@ -238,7 +234,7 @@ library(ggplot2)
     
     print(plot)
     
-    # 7. Outliers analysis
+    # 6. Outliers analysis
     # NOTE: outliers analysis cannot be performed for models with a small number 
     # of observations (i.e., Lepidoptera and Odonata)
     
@@ -246,13 +242,13 @@ library(ggplot2)
       x <- cooks.distance(mod, parallel = "snow", ncpus=40)  # this can take a few minutes
       plot(x, type="o", pch=19, xlab="Observed Outcome", ylab="Cook's Distance", las=1) 
     
-      # 7.1. Outlier identification  
+      # 6.1. Outlier identification  
         treshold <- 4 / length(x)                          # set a treshold         
         outliers <- data_model$id_r[which(x > treshold)]   # identify outliers
         abline(h = treshold, col = "purple", lwd = 2)      # add an horizontal line
         outlier_rows <- data_model[which(x > treshold), ]  # identify dataset rows with outliers
         
-      # 7.2. Outliers removal
+      # 6.2. Outliers removal
         # exclude identified outliers
         data_out <- data_model %>% filter(!id_r %in% outliers) 
         
@@ -261,7 +257,7 @@ library(ggplot2)
         summary(mod_out)
         
 
-      # 7.3. Compare analysis with and without outliers
+      # 6.3. Compare analysis with and without outliers
         # extract model results
         coef_out <- data.frame(
           Term = rownames(mod_out$b),           # Extract term names
