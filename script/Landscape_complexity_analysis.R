@@ -23,7 +23,7 @@ library(ggplot2)
 ############################ RUN THIS ##########################################
 
   # load dataset
-  setwd("C:/R_files/git_open/meta/data")
+  setwd("") # insert here the directory of the downloaded data file
   data <- read.csv("dataset.csv", sep = ";") 
   
   # calculate effect size
@@ -31,20 +31,20 @@ library(ggplot2)
     
   # function to build the model
       build_model <- function(data, mods = NULL) {
-        if(length(unique(data$ref)) <= 2) {  # if there are only two studies, don't include random effects
+        if(length(unique(data$ref)) <= 2) {  
           random_effect <- ~ 1
         } else {
           random_effect <- ~ 1 | ref / id_r 
         }
         
-        if (is.null(mods)) {   # only include the 'mods' argument if it's not NULL
-          rma.mv(yi,           # call rma.mv without the mods argument
+        if (is.null(mods)) {   
+          rma.mv(yi,           
                  vi, 
                  random = ~ 1 | ref / id_r, 
                  data = data, 
                  method = "REML", 
                  level = 95)
-        } else {               # Call rma.mv with the mods argument if it's provided
+        } else {               
           rma.mv(yi,           
                  vi, 
                  random = ~ 1 | ref / id_r, 
@@ -80,7 +80,7 @@ library(ggplot2)
 
   
     # Insert the choosen label
-    LB <- "general"  
+    LB <- "land_vert"  
     
     # Run this to select the appropriate data and model structure
       switch(LB,
@@ -90,12 +90,12 @@ library(ggplot2)
                mod <- build_model(data_model, mods = mods)
              },
              "land_vert" = {
-               data_model <- filter(data, tax == "vertebrate")
+               data_model <- filter(data, grupo == "Vertebrate")
                mods <- NULL
                mod <- build_model(data_model, mods = mods)
              },
              "land_invert" = {
-               data_model <- filter(data, tax == "invertebrate")
+               data_model <- filter(data, grupo == "Arthropod")
                mods <- NULL
                mod <- build_model(data_model, mods = mods)
              },
@@ -105,12 +105,12 @@ library(ggplot2)
                mod <- build_model(data_model, mods = mods)
              },
              "dim_vert" = {
-               data_model <- filter(data, tax == "vertebrate")
+               data_model <- filter(data, grupo == "Vertebrate")
                mods <- ~g_indicator
                mod <- build_model(data_model, mods = mods)
              },
              "dim_invert" = {
-               data_model <- filter(data, tax == "invertebrate")
+               data_model <- filter(data, grupo == "Arthropod")
                mods <- ~g_indicator
                mod <- build_model(data_model, mods = mods)
              },
@@ -279,8 +279,10 @@ library(ggplot2)
         print(coef_bt)
         print(coef_bt_out)
         
-      
-      
+
+residuos <- resid(mod)      
+hist(residuos, breaks = 20, main = "Distribución de residuos", xlab = "Residuos")
+        
       
       
       
